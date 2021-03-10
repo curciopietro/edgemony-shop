@@ -2,18 +2,20 @@ import PropTypes from "prop-types";
 
 import "./HeaderCart.css";
 
-function HeaderCart({ cart, products }) {
-  const totalPrice = cart.reduce((acc, cartItem) => {
-    const product = products.find(product => product.id === cartItem.id )
-    return acc + product.price
-  }, 0).toFixed(2)
-    
+function HeaderCart({ cart, products, openCartModal }) {
+  const totalPrice = cart
+    .reduce((acc, cartItem) => {
+      const product = products.find((product) => product.id === cartItem.id);
+      return acc + product.price;
+    }, 0)
+    .toFixed(2);
+
   return (
     <div className="HeaderCart">
-      { !!cart.length && <span className="price">{totalPrice}€</span> }
+      {!!cart.length && <span className="price">{totalPrice}€</span>}
       <span className="icon">
-        <i className="fas fa-shopping-cart"></i>
-        { !!cart.length && <span className="qty">{cart.length}</span> }
+        <i className="fas fa-shopping-cart" onClick={openCartModal}></i>
+        {!!cart.length && <span className="qty">{cart.length}</span>}
       </span>
     </div>
   );

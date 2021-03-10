@@ -8,6 +8,7 @@ import ProductList from "./components/ProductList";
 import ProductModal from "./components/ProductModal";
 import ErrorBanner from "./components/ErrorBanner";
 import { fetchProducts, fetchCatogories } from "./services/api";
+import CartModal from "./components/CartModal";
 
 const data = {
   title: "Edgemony Shop",
@@ -22,9 +23,13 @@ function App() {
   // Modal logic
   const [productInModal, setProductInModal] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [cartModalOpen, setCartModalOpen] = useState(false);
+
+  function openCartModal() {
+    setCartModalOpen(!cartModalOpen);
+  }
 
   function openProductModal(product) {
-    console.log(product);
     setProductInModal(product);
     setModalIsOpen(true);
   }
@@ -66,15 +71,27 @@ function App() {
   }, [retry]);
 
   // Cart Logic
-  const [ cart, setCart ] = useState([])
+  const [cart, setCart] = useState([]);
 
   return (
     <div className="App">
-      <Header logo={data.logo} title={data.title} cart={cart} products={products} />
+      <Header
+        logo={data.logo}
+        title={data.title}
+        cart={cart}
+        products={products}
+        openCartModal={openCartModal}
+      />
       <Hero
         title={data.title}
         description={data.description}
         cover={data.cover}
+      />
+      <CartModal
+        cartModalOpen={cartModalOpen}
+        openCartModal={openCartModal}
+        cart={cart}
+        products={products}
       />
       <main>
         {isLoading ? (

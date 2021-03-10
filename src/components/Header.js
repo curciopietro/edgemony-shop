@@ -1,13 +1,17 @@
 import PropTypes from "prop-types";
 
-import HeaderCart from './HeaderCart'
+import HeaderCart from "./HeaderCart";
 import "./Header.css";
 
-function Header({ logo, title, cart, products }) {
+function Header({ logo, title, cart, products, openCartModal }) {
   return (
     <header className="Header">
       <img src={logo} alt={title} />
-      <HeaderCart cart={cart} products={products} />
+      <HeaderCart
+        cart={cart}
+        products={products}
+        openCartModal={openCartModal}
+      />
     </header>
   );
 }
