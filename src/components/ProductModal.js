@@ -2,15 +2,20 @@ import { PropTypes } from "prop-types";
 
 import "./ProductModal.css";
 
-function ProductModal({ content, closeModal, isOpen, cart, setCart }) {
-  const isAlreadyInCart = () =>
-    cart.find((product) => product.id === content.id);
+function ProductModal({
+  content,
+  closeModal,
+  isOpen,
+  isInCart,
+  addToCart,
+  removeFromCart,
+}) {
+  const productId = content && content.id;
   const toggleCart = () => {
-    if (isAlreadyInCart()) {
-      const newCart = cart.filter((product) => product.id !== content.id);
-      setCart(newCart);
+    if (isInCart) {
+      removeFromCart(productId);
     } else {
-      setCart([{ id: content.id, quantity: 1 }, ...cart]);
+      addToCart(productId);
     }
   };
   return (
@@ -30,7 +35,7 @@ function ProductModal({ content, closeModal, isOpen, cart, setCart }) {
             <h2>{content.title}</h2>
             <p>{content.description}</p>
             <button type="button" className="addToCart" onClick={toggleCart}>
-              {isAlreadyInCart() ? "Remove to Cart -" : "Add to Cart +"}
+              {isInCart ? "Remove to Cart -" : "Add to Cart +"}
             </button>
             <br />
             <br />
@@ -49,8 +54,8 @@ ProductModal.propTypes = {
   product: PropTypes.object,
   closeModal: PropTypes.func.isRequired,
   isOpen: PropTypes.bool.isRequired,
-  cart: PropTypes.array.isRequired,
-  setCart: PropTypes.func.isRequired,
+  addToCart: PropTypes.func.isRequired,
+  removeFromCart: PropTypes.func.isRequired,
 };
 
 export default ProductModal;

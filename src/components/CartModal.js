@@ -1,14 +1,19 @@
 import "./CartModal.css";
 import ProductInCart from "./ProductInCart.js";
+import formatPrice from "../services/utils";
 
 export default function CartModal({
   cartModalOpen,
   openCartModal,
-  cart,
   products,
+  totalPrice,
+  setProductQuantity,
+  removeFromCart,
 }) {
   return (
-    <section className={cartModalOpen ? "cart-modal" : "cart-modal is-open"}>
+    <section
+      className={cartModalOpen ? "cart-modal" : "cart-modal slide-to-left"}
+    >
       <header className="cart-modal__header">
         <i
           className="fas fa-times cart-modal-close"
@@ -17,27 +22,21 @@ export default function CartModal({
         <div className="cart-modal__title">Cart</div>
       </header>
       <article className="cart-modal__main">
-        {cart.map((product) => {
-          return (
-            <ProductInCart
-              key={product.id}
-              product={products.find((p) => product.id === p.id)}
-            />
-          );
-        })}
+        {products.length > 0
+          ? products.map((product) => {
+              return (
+                <ProductInCart
+                  key={product.id}
+                  product={product}
+                  setProductQuantity={setProductQuantity}
+                  removeFromCart={removeFromCart}
+                />
+              );
+            })
+          : "The cart is empty"}
       </article>
       <footer className="cart-modal__footer">
-        <div>
-          Total: $
-          {cart
-            .reduce((acc, cartItem) => {
-              const product = products.find(
-                (product) => product.id === cartItem.id
-              );
-              return acc + product.price;
-            }, 0)
-            .toFixed(2)}
-        </div>
+        <div>Total: {formatPrice(totalPrice)}</div>
       </footer>
     </section>
   );

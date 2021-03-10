@@ -1,29 +1,23 @@
 import PropTypes from "prop-types";
+import formatPrice from "../services/utils";
 
 import "./HeaderCart.css";
 
-function HeaderCart({ cart, products, openCartModal }) {
-  const totalPrice = cart
-    .reduce((acc, cartItem) => {
-      const product = products.find((product) => product.id === cartItem.id);
-      return acc + product.price;
-    }, 0)
-    .toFixed(2);
-
+function HeaderCart({ cartTotal, cartSize, openCartModal }) {
   return (
     <div className="HeaderCart">
-      {!!cart.length && <span className="price">{totalPrice}€</span>}
+      {!!cartSize && <span className="price">{formatPrice(cartTotal)}</span>}
       <span className="icon">
         <i className="fas fa-shopping-cart" onClick={openCartModal}></i>
-        {!!cart.length && <span className="qty">{cart.length}</span>}
+        {!!cartSize && <span className="qty">{cartSize}</span>}
       </span>
     </div>
   );
 }
 
 HeaderCart.propTypes = {
-  cart: PropTypes.array.isRequired,
-  products: PropTypes.array.isRequired,
+  cartTotal: PropTypes.number.isRequired,
+  cartSize: PropTypes.number.isRequired,
 };
 
 export default HeaderCart;

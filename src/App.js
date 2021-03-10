@@ -23,11 +23,6 @@ function App() {
   // Modal logic
   const [productInModal, setProductInModal] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [cartModalOpen, setCartModalOpen] = useState(false);
-
-  function openCartModal() {
-    setCartModalOpen(!cartModalOpen);
-  }
 
   function openProductModal(product) {
     setProductInModal(product);
@@ -72,14 +67,52 @@ function App() {
 
   // Cart Logic
   const [cart, setCart] = useState([]);
+  const [cartModalOpen, setCartModalOpen] = useState(false);
+
+  const cartProducts = cart.map((cartItem) => {
+    const { price, image, title, id } = products.find(
+      (p) => p.id === cartItem.id
+    );
+    return { price, image, title, id, quantity: cartItem.quantity };
+  });
+
+  const cartTotal = cartProducts.reduce(
+    (total, product) => total + product.price * product.quantity,
+    0
+  );
+
+  const cartSize = cart.length;
+  const isProductModalInCart =
+    productInModal !== null &&
+    cart.find((p) => p.id === productInModal.id) != null;
+
+  function openCartModal() {
+    setCartModalOpen(!cartModalOpen);
+  }
+
+  function addToCart(productId) {
+    setCart([...cart, { id: productId, quantity: 1 }]);
+  }
+
+  function removeFromCart(productId) {
+    setCart(cart.filter((p) => p.id !== productId));
+  }
+
+  function setProductQuantity(productId, quantity) {
+    setCart(
+      cart.map((product) =>
+        product.id === productId ? { ...product, quantity } : product
+      )
+    );
+  }
 
   return (
     <div className="App">
       <Header
         logo={data.logo}
         title={data.title}
-        cart={cart}
-        products={products}
+        cartTotal={cartTotal}
+        cartSize={cartSize}
         openCartModal={openCartModal}
       />
       <Hero
@@ -90,8 +123,10 @@ function App() {
       <CartModal
         cartModalOpen={cartModalOpen}
         openCartModal={openCartModal}
-        cart={cart}
-        products={products}
+        products={cartProducts}
+        totalPrice={cartTotal}
+        setProductQuantity={setProductQuantity}
+        removeFromCart={removeFromCart}
       />
       <main>
         {isLoading ? (
@@ -114,8 +149,9 @@ function App() {
         isOpen={modalIsOpen}
         content={productInModal}
         closeModal={closeModal}
-        cart={cart}
-        setCart={setCart}
+        isInCart={isProductModalInCart}
+        addToCart={addToCart}
+        removeFromCart={removeFromCart}
       />
     </div>
   );
