@@ -1,27 +1,16 @@
-import "./CartModal.css";
+import "./Cart.css";
 import ProductInCart from "./ProductInCart.js";
 import formatPrice from "../services/utils";
 
-export default function CartModal({
-  cartModalOpen,
-  openCartModal,
+export default function Cart({
   products,
   totalPrice,
   setProductQuantity,
   removeFromCart,
 }) {
   return (
-    <section
-      className={cartModalOpen ? "cart-modal" : "cart-modal slide-to-left"}
-    >
-      <header className="cart-modal__header">
-        <i
-          className="fas fa-times cart-modal-close"
-          onClick={openCartModal}
-        ></i>
-        <div className="cart-modal__title">Cart</div>
-      </header>
-      <article className="cart-modal__main">
+    <div className="cart">
+      <article className="cart__main">
         {products.length > 0
           ? products.map((product) => {
               return (
@@ -35,9 +24,9 @@ export default function CartModal({
             })
           : "The cart is empty"}
       </article>
-      <footer className="cart-modal__footer">
+      <footer className="cart__footer">
         <div>Total: {formatPrice(totalPrice)}</div>
       </footer>
-    </section>
+    </div>
   );
 }
