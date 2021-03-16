@@ -1,3 +1,7 @@
+.cart {
+  flex-grow: 1;
+}
+
 .cart__main {
   flex-grow: 1;
   display: flex;
