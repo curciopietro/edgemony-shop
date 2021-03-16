@@ -5,10 +5,12 @@ import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Loader from "./components/Loader";
 import ProductList from "./components/ProductList";
-import ProductModal from "./components/ProductModal";
 import ErrorBanner from "./components/ErrorBanner";
 import { fetchProducts, fetchCatogories } from "./services/api";
-import CartModal from "./components/CartModal";
+import Cart from "./components/Cart";
+import ModalSideBar from "./components/ModalSideBar";
+import Modal from "./components/Modal";
+import ProductDetails from "./components/ProductDetails";
 
 const data = {
   title: "Edgemony Shop",
@@ -67,7 +69,7 @@ function App() {
 
   // Cart Logic
   const [cart, setCart] = useState([]);
-  const [cartModalOpen, setCartModalOpen] = useState(false);
+  const [modalSidebar, setModalSideBar] = useState(false);
 
   const cartProducts = cart.map((cartItem) => {
     const { price, image, title, id } = products.find(
@@ -86,8 +88,8 @@ function App() {
     productInModal !== null &&
     cart.find((p) => p.id === productInModal.id) != null;
 
-  function openCartModal() {
-    setCartModalOpen(!cartModalOpen);
+  function openSideBar() {
+    setModalSideBar(!modalSidebar);
   }
 
   function addToCart(productId) {
@@ -113,22 +115,36 @@ function App() {
         title={data.title}
         cartTotal={cartTotal}
         cartSize={cartSize}
-        openCartModal={openCartModal}
+        openSideBar={openSideBar}
       />
       <Hero
         title={data.title}
         description={data.description}
         cover={data.cover}
       />
-      <CartModal
-        cartModalOpen={cartModalOpen}
-        openCartModal={openCartModal}
-        products={cartProducts}
-        totalPrice={cartTotal}
-        setProductQuantity={setProductQuantity}
-        removeFromCart={removeFromCart}
-      />
       <main>
+        <ModalSideBar
+          modalSidebar={modalSidebar}
+          openSideBar={openSideBar}
+          title="Cart"
+        >
+          <Cart
+            products={cartProducts}
+            totalPrice={cartTotal}
+            setProductQuantity={setProductQuantity}
+            removeFromCart={removeFromCart}
+          />
+        </ModalSideBar>
+
+        <Modal isOpen={modalIsOpen} closeModal={closeModal}>
+          <ProductDetails
+            content={productInModal}
+            isInCart={isProductModalInCart}
+            addToCart={addToCart}
+            removeFromCart={removeFromCart}
+          />
+        </Modal>
+
         {isLoading ? (
           <Loader />
         ) : apiError ? (
@@ -145,14 +161,6 @@ function App() {
           />
         )}
       </main>
-      <ProductModal
-        isOpen={modalIsOpen}
-        content={productInModal}
-        closeModal={closeModal}
-        isInCart={isProductModalInCart}
-        addToCart={addToCart}
-        removeFromCart={removeFromCart}
-      />
     </div>
   );
 }
