@@ -1,16 +1,12 @@
-import { useState, useEffect } from "react";
-
+import { useState } from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./App.css";
 import Header from "./components/Header";
-import Hero from "./components/Hero";
-import Loader from "./components/Loader";
-import ProductList from "./components/ProductList";
-import ErrorBanner from "./components/ErrorBanner";
-import { fetchProducts, fetchCatogories } from "./services/api";
+import Home from "./pages/Home";
+import Product from "./pages/Product";
 import Cart from "./components/Cart";
 import ModalSideBar from "./components/ModalSideBar";
-import Modal from "./components/Modal";
-import ProductDetails from "./components/ProductDetails";
+import Page404 from "./pages/Page404";
 
 const data = {
   title: "Edgemony Shop",
@@ -23,77 +19,53 @@ const data = {
 
 function App() {
   // Modal logic
-  const [productInModal, setProductInModal] = useState(null);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  function openProductModal(product) {
-    setProductInModal(product);
-    setModalIsOpen(true);
-  }
+  // const [modalIsOpen, setModalIsOpen] = useState(false);
+  // const [productInModal, setProductInModal] = useState(null);
 
-  function closeModal() {
-    setModalIsOpen(false);
-    setTimeout(() => {
-      setProductInModal(null);
-    }, 500);
-  }
+  // function openProductModal(product) {
+  //   setProductInModal(product);
+  //   setModalIsOpen(true);
+  // }
 
-  useEffect(() => {
-    if (modalIsOpen) {
-      document.body.style.height = `100vh`;
-      document.body.style.overflow = `hidden`;
-    } else {
-      document.body.style.height = ``;
-      document.body.style.overflow = ``;
-    }
-  }, [modalIsOpen]);
+  // function closeModal() {
+  //   setModalIsOpen(false);
+  //   setTimeout(() => {
+  //     setProductInModal(null);
+  //   }, 500);
+  // }
 
-  // API data logic
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [apiError, setApiError] = useState("");
-  const [retry, setRetry] = useState(false);
-
-  useEffect(() => {
-    setIsLoading(true);
-    setApiError("");
-    Promise.all([fetchProducts(), fetchCatogories()])
-      .then(([products, categories]) => {
-        setProducts(products);
-        setCategories(categories);
-      })
-      .catch((err) => setApiError(err.message))
-      .finally(() => setIsLoading(false));
-  }, [retry]);
+  // useEffect(() => {
+  //   if (modalIsOpen) {
+  //     document.body.style.height = `100vh`;
+  //     document.body.style.overflow = `hidden`;
+  //   } else {
+  //     document.body.style.height = ``;
+  //     document.body.style.overflow = ``;
+  //   }
+  // }, [modalIsOpen]);
 
   // Cart Logic
   const [cart, setCart] = useState([]);
   const [modalSidebar, setModalSideBar] = useState(false);
 
-  const cartProducts = cart.map((cartItem) => {
-    const { price, image, title, id } = products.find(
-      (p) => p.id === cartItem.id
-    );
-    return { price, image, title, id, quantity: cartItem.quantity };
-  });
-
-  const cartTotal = cartProducts.reduce(
+  const cartTotal = cart.reduce(
     (total, product) => total + product.price * product.quantity,
     0
   );
 
   const cartSize = cart.length;
-  const isProductModalInCart =
-    productInModal !== null &&
-    cart.find((p) => p.id === productInModal.id) != null;
+
+  function isInCart(product) {
+    return product != null && cart.find((p) => p.id === product.id) != null;
+  }
 
   function openSideBar() {
     setModalSideBar(!modalSidebar);
   }
 
-  function addToCart(productId) {
-    setCart([...cart, { id: productId, quantity: 1 }]);
+  function addToCart(product) {
+    setCart([...cart, { ...product, quantity: 1 }]);
   }
 
   function removeFromCart(productId) {
@@ -109,59 +81,45 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <Header
-        logo={data.logo}
-        title={data.title}
-        cartTotal={cartTotal}
-        cartSize={cartSize}
-        openSideBar={openSideBar}
-      />
-      <Hero
-        title={data.title}
-        description={data.description}
-        cover={data.cover}
-      />
-      <main>
+    <Router>
+      <div className="App">
+        <Header
+          logo={data.logo}
+          title={data.title}
+          cartTotal={cartTotal}
+          cartSize={cartSize}
+          openSideBar={openSideBar}
+        />
+
         <ModalSideBar
           modalSidebar={modalSidebar}
           openSideBar={openSideBar}
           title="Cart"
         >
           <Cart
-            products={cartProducts}
+            products={cart}
             totalPrice={cartTotal}
             setProductQuantity={setProductQuantity}
             removeFromCart={removeFromCart}
           />
         </ModalSideBar>
-
-        <Modal isOpen={modalIsOpen} closeModal={closeModal}>
-          <ProductDetails
-            content={productInModal}
-            isInCart={isProductModalInCart}
-            addToCart={addToCart}
-            removeFromCart={removeFromCart}
-          />
-        </Modal>
-
-        {isLoading ? (
-          <Loader />
-        ) : apiError ? (
-          <ErrorBanner
-            message={apiError}
-            close={() => setApiError("")}
-            retry={() => setRetry(!retry)}
-          />
-        ) : (
-          <ProductList
-            products={products}
-            categories={categories}
-            openProductModal={openProductModal}
-          />
-        )}
-      </main>
-    </div>
+        <Switch>
+          <Route exact path="/">
+            <Home />
+          </Route>
+          <Route path="/product/:productId">
+            <Product
+              addToCart={addToCart}
+              removeFromCart={removeFromCart}
+              isInCart={isInCart}
+            />
+          </Route>
+          <Route path="*">
+            <Page404 />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 

@@ -1,5 +1,6 @@
 import { PropTypes } from "prop-types";
 
+import { Link } from "react-router-dom";
 import "./Product.css";
 
 function Product({ product, openProductModal }) {
@@ -10,14 +11,13 @@ function Product({ product, openProductModal }) {
         <h1>{product.title}</h1>
         <p>Price: {product.price}€</p>
       </div>
-      <button onClick={openProductModal}>View details</button>
+      <Link to={`/product/${product.id}`}>View details</Link>
     </article>
   );
 }
 
 Product.propTypes = {
   product: PropTypes.object.isRequired,
-  openProductModal: PropTypes.func.isRequired,
 };
 
 export default Product;

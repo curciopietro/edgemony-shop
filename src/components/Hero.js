@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-
 import "./Hero.css";
 
 function Hero({ cover, title, description }) {
