@@ -6,7 +6,7 @@ import Search from "./Search";
 import "./ProductList.css";
 import CategoriesFilter from "./CategoriesFilter";
 
-function ProductList({ products, categories, openProductModal }) {
+function ProductList({ products, categories }) {
   const [searchTerm, setSearchTerm] = useState();
   const [selectedCategories, setSelectedCategories] = useState([]);
 
@@ -30,11 +30,7 @@ function ProductList({ products, categories, openProductModal }) {
       </div>
       <div className="ProductList__products">
         {filteredProducts.map((product) => (
-          <Product
-            product={product}
-            key={product.id}
-            openProductModal={() => openProductModal(product)}
-          />
+          <Product product={product} key={product.id} />
         ))}
       </div>
     </div>
@@ -44,7 +40,6 @@ function ProductList({ products, categories, openProductModal }) {
 ProductList.propTypes = {
   products: PropTypes.array.isRequired,
   categories: PropTypes.array.isRequired,
-  openProductModal: PropTypes.func.isRequired,
 };
 
 export default ProductList;
