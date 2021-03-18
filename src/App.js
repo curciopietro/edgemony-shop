@@ -4,8 +4,7 @@ import "./App.css";
 import Header from "./components/Header";
 import Home from "./pages/Home";
 import Product from "./pages/Product";
-import Cart from "./components/Cart";
-import ModalSideBar from "./components/ModalSideBar";
+import Cart from "./pages/Cart";
 import Page404 from "./pages/Page404";
 
 const data = {
@@ -47,7 +46,6 @@ function App() {
 
   // Cart Logic
   const [cart, setCart] = useState([]);
-  const [modalSidebar, setModalSideBar] = useState(false);
 
   const cartTotal = cart.reduce(
     (total, product) => total + product.price * product.quantity,
@@ -58,10 +56,6 @@ function App() {
 
   function isInCart(product) {
     return product != null && cart.find((p) => p.id === product.id) != null;
-  }
-
-  function openSideBar() {
-    setModalSideBar(!modalSidebar);
   }
 
   function addToCart(product) {
@@ -88,24 +82,19 @@ function App() {
           title={data.title}
           cartTotal={cartTotal}
           cartSize={cartSize}
-          openSideBar={openSideBar}
         />
 
-        <ModalSideBar
-          modalSidebar={modalSidebar}
-          openSideBar={openSideBar}
-          title="Cart"
-        >
-          <Cart
-            products={cart}
-            totalPrice={cartTotal}
-            setProductQuantity={setProductQuantity}
-            removeFromCart={removeFromCart}
-          />
-        </ModalSideBar>
         <Switch>
           <Route exact path="/">
             <Home />
+          </Route>
+          <Route exact path="/cart">
+            <Cart
+              products={cart}
+              totalPrice={cartTotal}
+              setProductQuantity={setProductQuantity}
+              removeFromCart={removeFromCart}
+            />
           </Route>
           <Route path="/product/:productId">
             <Product

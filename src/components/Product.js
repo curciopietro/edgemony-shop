@@ -3,7 +3,7 @@ import { PropTypes } from "prop-types";
 import { Link } from "react-router-dom";
 import "./Product.css";
 
-function Product({ product, openProductModal }) {
+function Product({ product }) {
   return (
     <article className="Product">
       <img src={product.image} alt={product.title} />
