@@ -22,6 +22,7 @@ function Cart({ products, totalPrice, setProductQuantity, removeFromCart }) {
       <footer className="cart__footer">
         <div>Total: {formatPrice(totalPrice)}</div>
       </footer>
+      {products.length > 0 && <div>Go to checkout</div>}
     </div>
   );
 }

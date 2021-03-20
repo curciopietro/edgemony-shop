@@ -7,6 +7,7 @@ import Product from "./pages/Product";
 import Cart from "./pages/Cart";
 import Page404 from "./pages/Page404";
 import { postItemToCart, deleteItemFromCart } from "./services/api";
+import Checkout from "./pages/Checkout";
 
 const data = {
   title: "Edgemony Shop",
@@ -123,6 +124,9 @@ function App() {
               setProductQuantity={setProductQuantity}
               removeFromCart={removeFromCart}
             />
+          </Route>
+          <Route exact path="/cart/checkout">
+            <Checkout />
           </Route>
           <Route path="/product/:productId">
             <Product

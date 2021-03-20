@@ -1,0 +1,17 @@
+.checkout {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.checkout__form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.checkout__form input {
+  margin-bottom: 10px;
+}
