@@ -37,3 +37,34 @@ export async function deleteItemFromCart(cartId, productId) {
     method: "DELETE",
   });
 }
+
+export async function updateCart(cartId, billingData) {
+  return (
+    callAPI(`carts/${cartId}`),
+    {
+      method: "PATCH",
+      body: {
+        billingData: billingData,
+      },
+    }
+  );
+}
+
+export async function createOrder(cartId) {
+  return (
+    callAPI("orders"),
+    {
+      method: "POST",
+      body: { cartId: cartId },
+    }
+  );
+}
+
+export async function createNewCart() {
+  return (
+    callAPI("carts"),
+    {
+      method: "POST",
+    }
+  );
+}

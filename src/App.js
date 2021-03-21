@@ -126,7 +126,7 @@ function App() {
             />
           </Route>
           <Route exact path="/cart/checkout">
-            <Checkout />
+            <Checkout cartId={cartId} />
           </Route>
           <Route path="/product/:productId">
             <Product

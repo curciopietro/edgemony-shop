@@ -1,6 +1,7 @@
 import "../components/Cart.css";
 import ProductInCart from "../components/ProductInCart";
 import formatPrice from "../services/utils";
+import { Link } from "react-router-dom";
 
 function Cart({ products, totalPrice, setProductQuantity, removeFromCart }) {
   return (
@@ -22,7 +23,11 @@ function Cart({ products, totalPrice, setProductQuantity, removeFromCart }) {
       <footer className="cart__footer">
         <div>Total: {formatPrice(totalPrice)}</div>
       </footer>
-      {products.length > 0 && <div>Go to checkout</div>}
+      {products.length > 0 && (
+        <Link to="/cart/checkout">
+          <button>Go to checkout</button>
+        </Link>
+      )}
     </div>
   );
 }

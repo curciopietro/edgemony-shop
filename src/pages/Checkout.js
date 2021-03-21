@@ -1,9 +1,10 @@
 import { useState } from "react";
 import "./Checkout.css";
+import { updateCart, createOrder, createNewCart } from "./../services/api";
 
 let billingData;
 
-export default function Checkout() {
+export default function Checkout({ cartId }) {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -26,7 +27,10 @@ export default function Checkout() {
       address: "",
       email: "",
     });
-    console.log(billingData);
+
+    updateCart(cartId, billingData);
+    createOrder(cartId);
+    createNewCart();
   };
 
   return (
